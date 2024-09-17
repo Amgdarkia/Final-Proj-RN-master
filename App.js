@@ -1,5 +1,4 @@
-// App.js
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -18,43 +17,41 @@ import AdminPage from './screens/AdminPage';
 const Stack = createStackNavigator();
 
 function MainScreen({ navigation }) {
+  const [showOptions, setShowOptions] = useState(false);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the App</Text>
       <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('HomePage')}
-      >
-        <Text style={styles.buttonText}>Go to Home Page</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('GuideRegister')}
-      >
-        <Text style={styles.buttonText}>Guide Register</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('TouristRegister')}
-      >
-        <Text style={styles.buttonText}>Tourist Register</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('HomePageGuide')}
-      >
-        <Text style={styles.buttonText}>Guide Home Page</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
+        style={styles.adminButton}
         onPress={() => navigation.navigate('AdminPage')}
       >
-        <Text style={styles.buttonText}>Admin Page</Text>
+        <Text style={styles.adminButtonText}>Admin Page</Text>
       </TouchableOpacity>
+
+      <Text style={styles.title}>Welcome! Please select your role</Text>
+      <TouchableOpacity
+        style={styles.welcomeButton}
+        onPress={() => setShowOptions(!showOptions)}
+      >
+        <Text style={styles.welcomeButtonText}>Choose</Text>
+      </TouchableOpacity>
+
+      {showOptions && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.roleButton}
+            onPress={() => navigation.navigate('GuideRegister')}
+          >
+            <Text style={styles.roleButtonText}>Guide</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.roleButton}
+            onPress={() => navigation.navigate('TouristRegister')}
+          >
+            <Text style={styles.roleButtonText}>Tourist</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -86,34 +83,72 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF', // Light blue for a welcoming background
+    backgroundColor: '#F0F4F8',
     padding: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
+    color: '#333',
     marginBottom: 30,
-    color: '#FF6F61', // Warm vibrant color for the title
-    textShadowColor: 'rgba(0, 0, 0, 0.2)', // Add subtle shadow for depth
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 3,
-  },
-  button: {
-    backgroundColor: '#FF6F61', // Coral color to make buttons pop
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    borderRadius: 25, // Rounded buttons for a friendlier look
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 10,
-    elevation: 5, // Elevation for Android shadow
-  },
-  buttonText: {
-    color: '#FFF', // White text for high contrast
-    fontSize: 16,
-    fontWeight: '600', // Make the text more readable
+    textShadowColor: 'rgba(0, 0, 0, 0.1)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
     textAlign: 'center',
+  },
+  welcomeButton: {
+    backgroundColor: '#FF6347',
+    paddingVertical: 15,
+    paddingHorizontal: 35,
+    borderRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+    marginVertical: 10,
+  },
+  welcomeButtonText: {
+    color: '#FFF',
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  roleButton: {
+    backgroundColor: '#4B0082',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    marginVertical: 10,
+  },
+  roleButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
+  },
+  adminButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    backgroundColor: '#4B0082',
+    padding: 10,
+    borderRadius: 20,
+  },
+  adminButtonText: {
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
