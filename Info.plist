@@ -1,0 +1,12 @@
+<key>NSCameraUsageDescription</key>
+<string>We need your permission to use your camera</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need your permission to access your photo library</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>We need your permission to save photos to your photo library</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your permission to access your location when the app is running</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>We need your permission to access your location even when the app is in the background</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your permission to access your location at all times</string>

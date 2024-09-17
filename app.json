@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "first-rn",
+    "slug": "first-rn",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need your permission to use your camera",
+        "NSPhotoLibraryUsageDescription": "We need your permission to access your photo library",
+        "NSPhotoLibraryAddUsageDescription": "We need your permission to save photos to your photo library",
+        "NSLocationWhenInUseUsageDescription": "We need your permission to access your location when the app is running",
+        "NSLocationAlwaysUsageDescription": "We need your permission to access your location even when the app is in the background",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your permission to access your location at all times",
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ]
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE"
+      ],
+      "package": "com.yourcompany.yourappname",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
