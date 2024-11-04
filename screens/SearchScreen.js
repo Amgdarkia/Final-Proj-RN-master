@@ -8,7 +8,6 @@ import axios from 'axios';
 import { FavoritesContext } from '../FavoritesContext';
 import { OPEN_CAGE_API, OPENWEATHERMAP_API_KEY } from '@env';
 import DateTimePicker from '@react-native-community/datetimepicker'; // Ensure you have this installed
-
 const images = [
     require('../assets/searchscreen1.webp'),
     require('../assets/searchscreen2.jpeg'),
@@ -84,7 +83,10 @@ export default function SearchScreen() {
         fetchGuides();
         fetchRoutes(); // Fetch routes data
     }, []);
-
+    useEffect(() => {
+        console.log("Route parameters:", route.params);
+    }, []);
+    
     const fetchTemperature = async () => {
         try {
             const response = await axios.get(
@@ -153,17 +155,50 @@ export default function SearchScreen() {
             setFilteredCountries([]);
         }
     };
-    const handleAddBooking = async (routeId, guideId) => {
-        console.log("handleAddBooking called", { routeId, guideId, touristId: tourist?.id, tourDate, specialRequests });
+    const findGuideByRouteId = async (routeId) => {
+        try {
+            // Fetch all guides
+            const guidesResponse = await axios.get('http://guides.somee.com/api/GuidesRW');
+            const guides = guidesResponse.data;
+          
     
-        if (!tourist || !tourist.id) {
-            console.error("Tourist information is missing.");
-            Alert.alert("Error", "Tourist information is missing.");
+            // Iterate over each guide to find the matching route
+            for (const guide of guides) {
+                try {
+                    const routesResponse = await axios.get(`http://guides.somee.com/api/GuidesRW/${guide.id}/routes`);
+                    const routes = routesResponse.data;
+                    console.log(`Fetched routes for guide ${guide.id}:`, routes); // Log routes fetched for each guide
+    
+                    // Check if this guide has the route we are looking for
+                    const routeExists = routes.find(route => route.routeId === routeId);
+                    if (routeExists) {
+                        console.log("Found matching route:", routeExists); // Log the matching route
+                        return guide.id;  // Return the guide ID when a match is found
+                    }
+                } catch (error) {
+                    console.error(`Error fetching routes for guide ${guide.id}:`, error);
+                }
+            }
+    
+            console.log("No guide found with route ID:", routeId); // Log if no route is found
+            // If no guide is found with the given route ID, return null
+            return null;
+        } catch (error) {
+            console.error('Error fetching guides:', error);
+            return null;
+        }
+    };
+    
+    const handleAddBooking = async (routeId) => {
+        const guideId = await findGuideByRouteId(routeId);
+        if (!guideId) {
+            console.error("No guide found for this route.");
             return;
         }
     
-        const booking = {
-            TouristId: tourist.id,
+        // If a guide is found, proceed to add the booking
+        const bookingData = {
+            TouristId: tourist?.touristId,
             GuideId: guideId,
             RouteId: routeId,
             TourDate: tourDate,
@@ -171,16 +206,13 @@ export default function SearchScreen() {
             SpecialRequests: specialRequests
         };
     
-        console.log("Attempting to add booking with data:", booking);
-    
         try {
-            const response = await axios.post('http://guides.somee.com/api/Tourists/addBooking', booking);
+            const response = await axios.post('http://guides.somee.com/api/Tourists/addBooking', bookingData);
             if (response.status === 201) {
                 console.log("Booking added successfully!");
                 Alert.alert("Success", "Booking added successfully!");
             } else {
-                console.error("Unable to complete booking.", response);
-                throw new Error('Unable to complete booking.');
+                throw new Error('Unable to complete booking');
             }
         } catch (error) {
             console.error('Error adding booking:', error);
@@ -228,17 +260,18 @@ export default function SearchScreen() {
             <Text style={styles.tripSubtitle}>Difficulty: {item.difficultyLevel}</Text>
             <Text style={styles.tripSubtitle}>Type: {item.routeType}</Text>
             <TouchableOpacity 
-                style={styles.addButton}
-                onPress={() => {
-                    if (tourDate && specialRequests !== '') {
-                        handleAddBooking(item.routeId, item.guideId); // Assuming routeId and guideId are properties of item
-                    } else {
-                        showDatePicker(); // Show the date picker if date or requests are not set
-                    }
-                }}
-            >
-                <Text style={styles.addButtonText}>Add Booking</Text>
-            </TouchableOpacity>
+    style={styles.addButton}
+    onPress={() => {
+        if (tourDate && specialRequests !== '') {
+            handleAddBooking(item.routeId, item.guideId); // Make sure routeId and guideId are being passed correctly
+        } else {
+            showDatePicker(); // This will prompt to pick a date first
+        }
+    }}
+>
+    <Text style={styles.addButtonText}>Add Booking</Text>
+</TouchableOpacity>
+
             {isDatePickerVisible && (
                 <DateTimePicker
                     testID="dateTimePicker"
