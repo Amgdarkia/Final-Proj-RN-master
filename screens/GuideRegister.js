@@ -8,7 +8,7 @@ import GuidesLogo from '../assets/guides-logo.svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
-// Updated API URL
+
 const apiUrl = 'http://guides.somee.com/api/GuidesRW';           //'https://application-guides.onrender.com/api/guides';
 
 export default function GuideRegister() {

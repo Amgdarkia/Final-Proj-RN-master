@@ -1,12 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text, ScrollView, Image, Dimensions, Linking, KeyboardAvoidingView, FlatList } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import GuidesLogo from '../assets/guides-logo.svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
 import { FavoritesContext } from '../FavoritesContext';
 import { OPEN_CAGE_API, OPENWEATHERMAP_API_KEY } from '@env';
+import DateTimePicker from '@react-native-community/datetimepicker'; // Ensure you have this installed
 
 const images = [
     require('../assets/searchscreen1.webp'),
@@ -57,6 +58,7 @@ const TripCard = ({ guide }) => {
 };
 export default function SearchScreen() {
     const navigation = useNavigation();
+    const route = useRoute();
     const { width } = Dimensions.get('window');
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [fromDate, setFromDate] = useState(new Date());
@@ -67,13 +69,15 @@ export default function SearchScreen() {
     const [temperature, setTemperature] = useState(null);
     const [hasCar, setHasCar] = useState(false);
     const scrollViewRef = useRef(null);
-
+     const tourist = route.params?.tourist;
     const [searchQuery, setSearchQuery] = useState('');
     const [countries, setCountries] = useState([]);
     const [filteredCountries, setFilteredCountries] = useState([]);
     const [guides, setGuides] = useState([]);
     const [routes, setRoutes] = useState([]); // Add routes state
-
+    const [tourDate, setTourDate] = useState(new Date());
+    const [specialRequests, setSpecialRequests] = useState('');
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     useEffect(() => {
         fetchTemperature();
         fetchCountries();
@@ -149,6 +153,52 @@ export default function SearchScreen() {
             setFilteredCountries([]);
         }
     };
+    const handleAddBooking = async (routeId, guideId) => {
+        console.log("handleAddBooking called", { routeId, guideId, touristId: tourist?.id, tourDate, specialRequests });
+    
+        if (!tourist || !tourist.id) {
+            console.error("Tourist information is missing.");
+            Alert.alert("Error", "Tourist information is missing.");
+            return;
+        }
+    
+        const booking = {
+            TouristId: tourist.id,
+            GuideId: guideId,
+            RouteId: routeId,
+            TourDate: tourDate,
+            BookingStatus: 'pending',
+            SpecialRequests: specialRequests
+        };
+    
+        console.log("Attempting to add booking with data:", booking);
+    
+        try {
+            const response = await axios.post('http://guides.somee.com/api/Tourists/addBooking', booking);
+            if (response.status === 201) {
+                console.log("Booking added successfully!");
+                Alert.alert("Success", "Booking added successfully!");
+            } else {
+                console.error("Unable to complete booking.", response);
+                throw new Error('Unable to complete booking.');
+            }
+        } catch (error) {
+            console.error('Error adding booking:', error);
+            Alert.alert("Error", "Failed to add booking: " + error.message);
+        }
+    };
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+    
+
+    const onDateConfirmed = (event, selectedDate) => {
+        const currentDate = selectedDate || tourDate;
+        console.log("Date confirmed:", currentDate);
+        setTourDate(currentDate);
+        setDatePickerVisibility(false);  
+    };
+    
 
     const openWebsite = (website) => {
         if (website) {
@@ -172,9 +222,44 @@ export default function SearchScreen() {
         <View style={styles.tripCard}>
             <Image source={require('../assets/searchscreen2.jpeg')} style={styles.tripImage} />
             <Text style={styles.tripTitle}>{item.description}</Text>
-            <Text style={styles.tripSubtitle}>Place: {item.startPoint} hours</Text>
+            <Text style={styles.tripSubtitle}>Start: {item.startPoint}</Text>
+            <Text style={styles.tripSubtitle}>End: {item.endPoint}</Text>
+            <Text style={styles.tripSubtitle}>Duration: {item.duration} hrs</Text>
+            <Text style={styles.tripSubtitle}>Difficulty: {item.difficultyLevel}</Text>
+            <Text style={styles.tripSubtitle}>Type: {item.routeType}</Text>
+            <TouchableOpacity 
+                style={styles.addButton}
+                onPress={() => {
+                    if (tourDate && specialRequests !== '') {
+                        handleAddBooking(item.routeId, item.guideId); // Assuming routeId and guideId are properties of item
+                    } else {
+                        showDatePicker(); // Show the date picker if date or requests are not set
+                    }
+                }}
+            >
+                <Text style={styles.addButtonText}>Add Booking</Text>
+            </TouchableOpacity>
+            {isDatePickerVisible && (
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={tourDate}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={onDateConfirmed}
+                />
+            )}
+            <TextInput
+                style={styles.input}
+                placeholder="Special Requests"
+                value={specialRequests}
+                onChangeText={setSpecialRequests}
+            />
         </View>
     );
+    
+    
+    
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding">
             <ScrollView>
@@ -453,10 +538,10 @@ const styles = StyleSheet.create({
     },
     tripCard: {
         backgroundColor: '#fff',
-        borderRadius: 20, // Rounded corners for trip cards
+        borderRadius: 20, 
         padding: 15,
         margin: 10,
-        width: 220, // Slightly bigger card size
+        width: 300, // Adjust width as necessary
         alignItems: 'center',
         borderColor: '#ddd',
         borderWidth: 1.5,
@@ -464,29 +549,53 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,
         shadowRadius: 8,
-        elevation: 10, // More shadow to create depth
+        elevation: 10,
+        flexDirection: 'column', // Ensure contents are stacked vertically
     },
+    
     tripImage: {
-        width: 140, // Larger image
+        width: 270, // Slightly smaller than the card to fit well
         height: 140,
         borderRadius: 15,
         marginBottom: 10,
     },
+    
     tripTitle: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
         textAlign: 'center',
+        marginBottom: 5, // Space between title and subtitles
     },
+    
     tripSubtitle: {
         fontSize: 14,
         color: '#666',
+        textAlign: 'center', // Center-align the text
+        marginBottom: 5, // Space between each subtitle
     },
-    tripFooter: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 15,
+    
+    addButton: {
+        marginTop: 10,
+        backgroundColor: '#4CAF50', 
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+        width: '100%', // Ensure the button stretches to the width of the card
     },
+    
+    addButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    
     ratingContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -519,4 +628,23 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontWeight: 'bold',
     },
+    addButton: {
+        marginTop: 10,
+        backgroundColor: '#4CAF50', // Green background
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 4,
+    },
+    addButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    
 });

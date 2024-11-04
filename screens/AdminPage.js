@@ -15,7 +15,7 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
 
-    // Fetch Guides and Tourists on mount
+    
     useEffect(() => {
         fetchAllGuidesAndTourists();
     }, []);

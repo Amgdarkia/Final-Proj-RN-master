@@ -44,7 +44,7 @@ export default function TouristRegister() {
         })
         .then(result => {
             console.log('API response:', result);
-    
+        
             // Navigate to HomePage and pass tourist data as params
             navigation.navigate('HomePage', { tourist: result });
         })
@@ -52,6 +52,7 @@ export default function TouristRegister() {
             console.log('Fetch error:', error);
             Alert.alert('Login Failed', error.message);
         });
+        
     };
     
 

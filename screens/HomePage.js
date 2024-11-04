@@ -65,7 +65,7 @@ export default function HomePage() {
                 },
             }}
         >
-            <Tab.Screen name="Search" component={SearchScreen} />
+            <Tab.Screen name="Search" component={SearchScreen}  initialParams={{ tourist }}  />
             <Tab.Screen name="Favorites" component={FavoriteScreen} />
             <Tab.Screen name="Settings" component={SettingsScreen} />
             <Tab.Screen
