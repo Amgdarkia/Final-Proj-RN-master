@@ -69,7 +69,7 @@ export default function TouristSignUp() {
             if (res.status === 200 || res.status === 201) {
                 // Success: handle accordingly
                 Alert.alert('Registration Successful', 'You have successfully registered!');
-                navigation.navigate('HomePage');
+                navigation.navigate('TouristRegister');
             } else if (res.status === 400) {
                 throw new Error('Registration details not correct');
             } else if (res.status === 409) {
@@ -181,6 +181,7 @@ export default function TouristSignUp() {
                     mode="date"
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
+                    themeVariant="light"
                 />
 
                 {/* Country Input */}

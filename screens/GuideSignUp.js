@@ -77,7 +77,7 @@ export default function GuideSignUp() {
         })
         .then(result => {
             console.log('API response:', result);
-            navigation.navigate('HomePageGuide');
+            navigation.navigate('GuideRegister');
         })
         .catch(error => {
             console.log('Fetch error:', error);
@@ -151,6 +151,7 @@ export default function GuideSignUp() {
                     mode="date"
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
+                    themeVariant="light"
                 />
 
                 <View style={styles.switchContainer}>

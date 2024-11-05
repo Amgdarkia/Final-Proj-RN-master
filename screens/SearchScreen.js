@@ -19,6 +19,7 @@ const CITY_NAME = 'paris';
 const TripCard = ({ guide }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const { addFavorite, removeFavorite } = useContext(FavoritesContext);
+    const navigation = useNavigation();
 
     const toggleFavorite = () => {
         setIsFavorite(!isFavorite);
@@ -27,6 +28,10 @@ const TripCard = ({ guide }) => {
         } else {
             addFavorite(guide);
         }
+    };
+
+    const handleNavigate = () => {
+        navigation.navigate('HomePageGuide', { guide: guide });
     };
 
     return (
@@ -51,6 +56,9 @@ const TripCard = ({ guide }) => {
                     ))}
                     <Text style={styles.ratingText}>{guide.averageRating}/5</Text>
                 </View>
+                <TouchableOpacity style={styles.profileButton} onPress={handleNavigate}>
+                    <Text style={styles.profileButtonText}>Guide's Profile</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -606,6 +614,16 @@ const styles = StyleSheet.create({
         color: '#666',
         textAlign: 'center', // Center-align the text
         marginBottom: 5, // Space between each subtitle
+    },
+    profileButton: {
+        backgroundColor: '#4CAF50',
+        padding: 8,
+        borderRadius: 5,
+    },
+    profileButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     
     addButton: {

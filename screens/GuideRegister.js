@@ -51,7 +51,7 @@ export default function GuideRegister() {
                     last_name: result.lastName,
                 };
                 
-                navigation.navigate('HomePageGuide', { guide });
+                navigation.navigate('ProfileScreen', { guide });
             })
             .catch(error => {
                 console.log('Fetch error:', error);
@@ -127,128 +127,128 @@ export default function GuideRegister() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'linear-gradient(135deg, #ff9966, #ff5e62)', // Stunning orange-pink gradient background
+        backgroundColor: '#F9FAFB', // Light background for a clean, modern look
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
     },
     logo: {
-        marginBottom: 30, // Increase space for better aesthetics
+        marginBottom: 40,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 10, // Depth effect for logo
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 10,
     },
     title: {
-        fontSize: 28, // Larger title for emphasis
-        fontWeight: 'bold',
-        color: '#fff', // White text for contrast
+        fontSize: 26,
+        fontWeight: '600',
+        color: '#333', // Darker text for readability
         marginBottom: 20,
-        textShadowColor: 'rgba(0, 0, 0, 0.3)', // Soft shadow for depth
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 5,
+        letterSpacing: 0.5, // Slight letter spacing for modern look
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent white background
+        backgroundColor: '#FFFFFF', // White background for contrast
         paddingHorizontal: 15,
-        marginVertical: 15,
-        borderRadius: 10,
-        borderColor: 'rgba(255, 255, 255, 0.7)', // Subtle white border
-        borderWidth: 1.5,
+        paddingVertical: 10,
+        marginVertical: 10,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#E5E7EB', // Subtle border color
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
-        elevation: 10, // Smooth elevation for input containers
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
     },
     inputIcon: {
         marginRight: 10,
-        color: '#007BFF', // Icon color to match the button
+        color: '#3B82F6', // Soft blue for a welcoming icon color
     },
     input: {
         flex: 1,
-        height: 55, // Taller input for better touch experience
-        color: '#333', // Dark text color for readability
+        height: 50,
+        color: '#333',
         fontSize: 16,
     },
     forgotPasswordContainer: {
         width: '100%',
         alignItems: 'flex-end',
-        marginBottom: 10,
+        marginBottom: 15,
     },
     forgotPasswordText: {
-        color: '#fff', // White text for contrast
+        color: '#3B82F6', // Soft blue to match the icon
         fontSize: 14,
-        textDecorationLine: 'underline', // Underline for clickable effect
+        textDecorationLine: 'underline',
     },
     loginButton: {
         width: '100%',
-        height: 55, // Taller button for better clickability
-        backgroundColor: 'linear-gradient(90deg, #007BFF, #00c6ff)', // Vibrant blue gradient button
+        height: 50,
+        backgroundColor: '#3B82F6', // Consistent soft blue for button
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10, // Rounded edges for smoothness
+        borderRadius: 12,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.4,
-        shadowRadius: 12,
-        elevation: 12, // Depth for login button
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 8,
         marginVertical: 20,
     },
     loginButtonText: {
-        color: '#fff', // White text for contrast
-        fontSize: 18, // Larger font size for readability
-        fontWeight: 'bold',
-        textTransform: 'uppercase', // Strong uppercase for CTA
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontWeight: '600',
+        textTransform: 'uppercase',
+        letterSpacing: 0.8, // Slight letter spacing for modern touch
     },
     separatorContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        marginVertical: 30,
+        marginVertical: 20,
     },
     separatorLine: {
         flex: 1,
         height: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)', // Soft white separator line
+        backgroundColor: '#D1D5DB', // Light separator color for elegance
     },
     separatorText: {
-        marginHorizontal: 15,
-        fontSize: 16,
-        color: '#fff', // White text for separator
+        marginHorizontal: 10,
+        fontSize: 14,
+        color: '#6B7280', // Muted text color for "OR"
     },
     socialButtonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginVertical: 30,
+        marginVertical: 20,
     },
     socialButton: {
-        width: 100,
-        height: 60,
-        backgroundColor: '#fff', // Clean white background for buttons
-        borderRadius: 20, // Smooth rounded corners
+        width: 90,
+        height: 50,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: '#E5E7EB',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.4,
-        shadowRadius: 8,
-        elevation: 10, // Deeper shadow for social buttons
-        marginHorizontal: 10, 
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
+        marginHorizontal: 5,
     },
     registerButton: {
-        marginTop: 20,
+        marginTop: 15,
     },
     registerButtonText: {
-        color: '#fff', // White text for contrast
+        color: '#3B82F6',
         fontSize: 16,
         fontWeight: 'bold',
-        textTransform: 'uppercase', // Strong uppercase for the register button
+        textDecorationLine: 'underline', // Underline for modern effect
     },
-}); 
+});
